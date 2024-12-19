@@ -8,6 +8,6 @@ module com.labs.textprocessor.textprocessor2 {
     requires org.kordamp.ikonli.javafx;
     requires com.almasb.fxgl.all;
 
-    opens com.labs.textprocessor.textprocessor2 to javafx.fxml;
-    exports com.labs.textprocessor.textprocessor2;
+    opens com.labs.textprocessor to javafx.fxml;
+    exports com.labs.textprocessor;
 }

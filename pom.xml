@@ -108,7 +108,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.labs.textprocessor.textprocessor2/com.labs.textprocessor.textprocessor2.TextProcessorApplication
+                                com.labs.textprocessor.textprocessor2/com.labs.textprocessor.TextProcessorApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

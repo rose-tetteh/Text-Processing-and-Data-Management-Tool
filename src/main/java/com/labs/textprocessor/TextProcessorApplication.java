@@ -1,4 +1,4 @@
-package com.labs.textprocessor.textprocessor2;
+package com.labs.textprocessor;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
