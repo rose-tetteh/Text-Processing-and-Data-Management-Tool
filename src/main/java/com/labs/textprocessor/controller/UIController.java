@@ -2,6 +2,7 @@ package com.labs.textprocessor.controller;
 
 import com.labs.textprocessor.regex.TextFileService;
 
+import com.labs.textprocessor.utils.FileOperationResult;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -60,7 +61,7 @@ public class UIController implements Initializable {
      * Sets up the font selection combo box with all available system fonts.
      * This method initializes the font dropdown with alphabetically sorted system fonts
      * and sets a default font value.
-     *
+
      * Time Complexity: O(n log n) where n is the number of available fonts
      * Space Complexity: O(n) where n is the number of available fonts
      *
@@ -105,6 +106,10 @@ public class UIController implements Initializable {
 
 
 
+    /**
+     * Handle the open option clicked (open a file and display content in TextArea).
+     */
+    @FXML
     public void handleOpenOptionClicked(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
@@ -114,10 +119,54 @@ public class UIController implements Initializable {
         Stage stage = (Stage) mainTextArea.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
 
+        if (file != null) {
+            // Call textFileService to read the file
+            FileOperationResult<String> result = textFileService.readFile(file.toPath());
+
+            if (result.isSuccess()) { // Use the isSuccess() method to check success
+                // If successful, set the content in the TextArea
+                mainTextArea.setText(result.getData());
+            } else {
+                // If error, show an alert or log the error message
+                System.out.println("Error reading file: " + result.getError());
+            }
+        }
     }
 
+
+
+
+
+    /**
+     * Handle the save option clicked (save the content of TextArea to a file).
+     */
+    @FXML
     public void handleSaveOptionClicked(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        // Show save file dialog
+        Stage stage = (Stage) mainTextArea.getScene().getWindow();
+        File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            // Get content from TextArea
+            String content = mainTextArea.getText();
+
+            // Call textFileService to write the content to the selected file
+            FileOperationResult<Void> result = textFileService.writeFile(file.toPath(), content);
+
+            if (result.isSuccess()) {
+                // If successful, show a confirmation or log
+                System.out.println("File saved successfully!");
+            } else {
+                // If error, show an alert or log the error message
+                System.out.println("Error saving file: " + result.getError());
+            }
+        }
     }
+
 
     public void applyFormatting(ActionEvent actionEvent) {
     }
