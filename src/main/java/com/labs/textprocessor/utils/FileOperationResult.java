@@ -22,4 +22,18 @@ public record FileOperationResult<T>(T data, String error, boolean success) {
     public static <T> FileOperationResult<T> error(String errorMessage) {
         return new FileOperationResult<>(null, errorMessage, false);
     }
+
+    public boolean isSuccess(){
+        return success;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+
 }
