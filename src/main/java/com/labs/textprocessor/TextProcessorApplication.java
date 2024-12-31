@@ -11,7 +11,7 @@ public class TextProcessorApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(TextProcessorApplication.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 960, 640);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();

@@ -192,7 +192,7 @@
     <!-- Main Content Area with Sidebar -->
     <SplitPane VBox.vgrow="ALWAYS">
         <!-- Main Text Area -->
-        <TextArea fx:id="inputTextArea" styleClass="main-text-area" wrapText="true" onKeyTyped="#handleCountWord"/>
+        <TextArea fx:id="mainTextArea" styleClass="main-text-area" wrapText="true" onKeyTyped="#handleCountWord"/>
 
         <!-- Right Sidebar -->
         <VBox styleClass="sidebar" prefWidth="100" stylesheets="@css/guistyle.css">
