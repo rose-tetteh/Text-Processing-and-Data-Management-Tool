@@ -1,0 +1,128 @@
+/* Sidebar Styling */
+.sidebar {
+    -fx-background-color: #f5f5f5;
+    -fx-border-width: 0 0 0 1;
+    -fx-border-color: #ddd;
+    -fx-padding: 15px;
+    -fx-spacing: 15px;
+    -fx-max-width: 300px;
+}
+
+/* Sidebar section styling */
+.sidebar-section {
+    -fx-padding: 15px;
+    -fx-spacing: 10px;
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5px;
+}
+
+/* Titled Pane styling */
+.titled-pane {
+    -fx-text-fill: #333333;
+    -fx-background-color: #e8e8e8;
+    -fx-background-radius: 5px;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #e8e8e8;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 10px;
+}
+
+/* History List */
+.history-list {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-padding: 8px;
+    -fx-spacing: 5px;
+    -fx-min-height: 300px; /* Increased height for better visibility */
+}
+
+/* History List Cell */
+.history-list .list-cell {
+    -fx-padding: 8px 10px;
+    -fx-border-color: transparent transparent #eee transparent;
+}
+
+.history-list .list-cell:hover {
+    -fx-background-color: #f8f8f8;
+}
+
+/* Button Styling */
+.search-button, .history-button {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+    -fx-padding: 5 15px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.search-button:hover, .history-button:hover {
+    -fx-background-color: #357abd;
+}
+
+/* Results Label */
+.results-label {
+    -fx-text-fill: #666;
+    -fx-font-style: italic;
+    -fx-font-size: 12px;
+}
+
+/* Regex List Box Height Adjustment */
+.regex-list-box {
+    -fx-min-height: 150px; /* Increased height for the regex list */
+    -fx-max-height: 300px; /* Set max height to avoid overflow */
+    -fx-background-color: white;
+    -fx-border-radius: 5px;
+    -fx-border-color: #ddd;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+.regex-list-box .list-cell {
+    -fx-padding: 8px 10px;
+    -fx-border-color: transparent transparent #eee transparent;
+}
+
+.regex-list-box .list-cell:hover {
+    -fx-background-color: #f8f8f8;
+}
+
+/* Custom icons for the sidebar */
+.sidebar .toolbar-icon {
+    -fx-font-family: 'Segoe MDL2 Assets';
+    -fx-font-size: 18px;
+    -fx-text-fill: #4a90e2;
+}
+
+/* Adjust layout of sidebar when using different sections */
+.sidebar > .sidebar-section {
+    -fx-spacing: 20px;
+}
+
+/* Ensure split pane divider in sidebar is subtle */
+.split-pane-divider {
+    -fx-background-color: #ddd;
+    -fx-padding: 0 1px;
+}
+
+/* ComboBox in Sidebar */
+.sidebar .combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 4px;
+    -fx-padding: 5px;
+}
+
+.sidebar .combo-box:hover {
+    -fx-border-color: #2196F3;
+}
+
+.sidebar .combo-box:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2;
+}

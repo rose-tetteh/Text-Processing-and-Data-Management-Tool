@@ -1,0 +1,381 @@
+/* Root styles */
+.root {
+    -fx-background-color: #ffffff;
+    -fx-font-family: 'Segoe UI', system;
+
+    /* Custom colors */
+    -primary-color: #2196F3;
+    -secondary-color: #1976D2;
+    -accent-color: #64B5F6;
+    -gray-color: #757575;
+    -light-gray: #F5F5F5;
+    -border-color: #E0E0E0;
+}
+
+/* MenuBar styling */
+.modern-menu-bar {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 0 5 0 5;
+}
+
+.menu-bar .menu-button:hover,
+.menu-bar .menu-button:showing {
+    -fx-background-color: -light-gray;
+}
+
+.menu-item {
+    -fx-padding: 8 24 8 24;
+}
+
+.menu-item:focused {
+    -fx-background-color: -accent-color;
+}
+
+/* Toolbar styling */
+.formatting-toolbar {
+    -fx-background-color: white;
+    -fx-padding: 5 10 5 10;
+    -fx-spacing: 5;
+    -fx-border-color: -border-color;
+    -fx-border-width: 0 0 1 0;
+}
+
+.toolbar-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-background-radius: 4;
+}
+
+.toolbar-button:hover {
+    -fx-background-color: -light-gray;
+}
+
+.toolbar-button:pressed {
+    -fx-background-color: derive(-light-gray, -10%);
+}
+
+/* Format buttons (Bold, Italic, etc.) */
+.format-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5 10;
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-background-radius: 4;
+}
+
+.format-button:selected {
+    -fx-background-color: -accent-color;
+    -fx-text-fill: white;
+}
+
+/* ComboBox styling */
+.font-combo, .size-combo {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.combo-box:hover {
+    -fx-border-color: -primary-color;
+}
+
+.combo-box:focused {
+    -fx-border-color: -primary-color;
+    -fx-border-width: 2;
+}
+
+/* Search bar styling */
+.search-bar {
+    -fx-background-color: white;
+    -fx-padding: 10;
+    -fx-spacing: 10;
+    -fx-border-color: -border-color;
+    -fx-border-width: 0 0 1 0;
+}
+
+.search-bar .text-field {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 5 10;
+}
+
+.search-bar .text-field:focused {
+    -fx-border-color: -primary-color;
+}
+
+.search-button {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-background-radius: 4;
+    -fx-padding: 5 15;
+}
+
+.search-button:hover {
+    -fx-background-color: -secondary-color;
+}
+
+.close-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+}
+
+.close-button:hover {
+    -fx-background-color: #ffebee;
+}
+
+/* Main text area styling */
+.main-text-area {
+    -fx-background-color: white;
+    -fx-padding: 10;
+    -fx-font-family: 'Segoe UI';
+    -fx-font-size: 13px;
+}
+
+.main-text-area .content {
+    -fx-background-color: white;
+}
+
+.main-text-area:focused .content {
+    -fx-background-color: white;
+}
+
+/* Status bar styling */
+.status-bar {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 5 10;
+    -fx-spacing: 15;
+    -fx-border-color: -border-color;
+    -fx-border-width: 1 0 0 0;
+}
+
+.status-bar .label {
+    -fx-text-fill: -gray-color;
+    -fx-font-size: 12px;
+}
+
+.status-bar .separator {
+    -fx-background-color: -border-color;
+    -fx-padding: 0 5;
+}
+
+/* Color picker styling */
+.color-picker {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-border-color: -border-color;
+}
+
+.color-picker:hover {
+    -fx-border-color: -primary-color;
+}
+
+/* Tooltip styling */
+.tooltip {
+    -fx-background-color: #424242;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+}
+
+/* Split pane styling */
+.split-pane {
+    -fx-background-color: white;
+    -fx-padding: 0;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+    -fx-background-color: -border-color;
+    -fx-padding: 0 1;
+}
+
+/* Checkbox styling */
+.check-box {
+    -fx-padding: 5;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 3;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -primary-color;
+    -fx-border-color: -primary-color;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+/* Scrollbar styling */
+.scroll-bar {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #bababa;
+    -fx-background-radius: 6;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #a0a0a0;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Custom icons using Unicode characters */
+.toolbar-icon {
+    -fx-font-family: 'Segoe MDL2 Assets';
+    -fx-font-size: 16px;
+    -fx-text-fill: -gray-color;
+}
+
+#newButton .toolbar-icon {
+    -fx-text-fill: -gray-color;
+    -fx-font-family: 'Segoe MDL2 Assets';
+    -fx-text-fill: -gray-color;
+    -fx-font-size: 16px;
+    -fx-text-fill: -gray-color;
+}
+
+#openButton .toolbar-icon {
+    -fx-text-fill: -gray-color;
+    -fx-font-family: 'Segoe MDL2 Assets';
+    -fx-text-fill: -gray-color;
+    -fx-font-size: 16px;
+    -fx-text-fill: -gray-color;
+}
+
+#saveButton .toolbar-icon {
+    -fx-text-fill: -gray-color;
+    -fx-font-family: 'Segoe MDL2 Assets';
+    -fx-text-fill: -gray-color;
+    -fx-font-size: 16px;
+    -fx-text-fill: -gray-color;
+}
+
+/* Icon styling */
+.toolbar-icon {
+    -fx-font-size: 16px;
+    -fx-text-fill: #555555;
+}
+
+.format-button .toolbar-icon {
+    -fx-font-weight: bold;
+}
+
+.format-button:selected .toolbar-icon {
+    -fx-text-fill: white;
+}
+
+/* Bold, Italic, Underline specific styling */
+#boldButton .toolbar-icon {
+    -fx-font-weight: bold;
+}
+
+#italicButton .toolbar-icon {
+    -fx-font-style: italic;
+}
+
+#underlineButton .toolbar-icon {
+    -fx-underline: true;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    -fx-background-color: #f5f5f5;
+    -fx-border-width: 0 0 0 1;
+    -fx-border-color: #ddd;
+}
+
+.sidebar-section {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+.titled-pane {
+    -fx-text-fill: #333333;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #e8e8e8;
+    -fx-font-weight: bold;
+}
+
+.history-list {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1;
+}
+
+.history-list .list-cell {
+    -fx-padding: 8 5 8 5;
+    -fx-border-color: transparent transparent #eee transparent;
+}
+
+.history-list .list-cell:hover {
+    -fx-background-color: #f8f8f8;
+}
+
+.search-button, .history-button {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+}
+
+.search-button:hover, .history-button:hover {
+    -fx-background-color: #357abd;
+}
+
+.results-label {
+    -fx-text-fill: #666;
+    -fx-font-style: italic;
+}
+
+/* Make sure the split pane divider is subtle */
+.split-pane-divider {
+    -fx-background-color: #ddd;
+    -fx-padding: 0 1 0 1;
+}
+
+/* Checkbox styling */
+.check-box {
+    -fx-font-size: 12px;
+}
+
+/* ComboBox styling */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 3;
+}
+
+/* TextField styling */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 3;
+    -fx-padding: 5;
+}
+
