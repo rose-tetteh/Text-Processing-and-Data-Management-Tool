@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<VBox prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.labs.textprocessor.controller.UIController" fx:id="menuBox"
+      stylesheets="@styles.css">
+
+    <!-- Main Toolbar -->
+    <ToolBar styleClass="formatting-toolbar">
+        <items>
+            <!-- File Operations -->
+            <Button styleClass="toolbar-button" fx:id="newButton">
+                <tooltip>
+                    <Tooltip text="New (Ctrl+N)"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="📄"/>
+                </graphic>
+            </Button>
+            <Button styleClass="toolbar-button" fx:id="openButton" onAction="#handleOpenOptionClicked">
+                <tooltip>
+                    <Tooltip text="Open (Ctrl+O)"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="📂"/>
+                </graphic>
+            </Button>
+            <!-- Added Recent Files Button -->
+            <MenuButton styleClass="toolbar-button" fx:id="recentFilesButton">
+                <tooltip>
+                    <Tooltip text="Recent Files"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="📋"/>
+                </graphic>
+                <!-- Recent files will be populated programmatically -->
+            </MenuButton>
+            <Button styleClass="toolbar-button" fx:id="saveButton" onAction="#handleSaveOptionClicked">
+                <tooltip>
+                    <Tooltip text="Save (Ctrl+S)"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="💾"/>
+                </graphic>
+            </Button>
+            <Separator orientation="VERTICAL"/>
+
+            <!-- Added Undo/Redo Buttons -->
+            <Button styleClass="toolbar-button" fx:id="undoButton">
+                <tooltip>
+                    <Tooltip text="Undo (Ctrl+Z)"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="↺"/>
+                </graphic>
+            </Button>
+            <Button styleClass="toolbar-button" fx:id="redoButton">
+                <tooltip>
+                    <Tooltip text="Redo (Ctrl+Y)"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="↻"/>
+                </graphic>
+            </Button>
+            <Separator orientation="VERTICAL"/>
+
+            <!-- Rest of the toolbar items remain the same -->
+            <ComboBox fx:id="fontBox" prefWidth="150.0" promptText="Font" styleClass="font-combo" onAction="#applyFormatting"/>
+            <ComboBox fx:id="fontSizeBox" prefWidth="70.0" promptText="Size" styleClass="size-combo" onAction="#applyFormatting"/>
+            <Separator orientation="VERTICAL"/>
+
+            <ToggleButton fx:id="boldButton" styleClass="format-button" onAction="#applyFormatting">
+                <tooltip>
+                    <Tooltip text="Bold (Ctrl+B)"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="B"/>
+                </graphic>
+            </ToggleButton>
+            <ToggleButton fx:id="italicButton" styleClass="format-button" onAction="#applyFormatting">
+                <tooltip>
+                    <Tooltip text="Italic (Ctrl+I)"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="I" />
+                </graphic>
+            </ToggleButton>
+            <ToggleButton fx:id="underlineButton" styleClass="format-button" onAction="#applyFormatting">
+                <tooltip>
+                    <Tooltip text="Underline (Ctrl+U)"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="U"/>
+                </graphic>
+            </ToggleButton>
+            <Separator orientation="VERTICAL"/>
+
+            <ColorPicker fx:id="textColorPicker" styleClass="color-picker" onAction="#applyFormatting">
+                <tooltip>
+                    <Tooltip text="Text Color"/>
+                </tooltip>
+            </ColorPicker>
+
+            <Separator orientation="VERTICAL"/>
+
+            <!-- Alignment -->
+            <ToggleButton fx:id="alignLeftButton" styleClass="format-button" onAction="#applyFormatting">
+                <tooltip>
+                    <Tooltip text="Align Left"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="⫷"/>
+                </graphic>
+            </ToggleButton>
+            <ToggleButton fx:id="alignCenterButton" styleClass="format-button" onAction="#applyFormatting">
+                <tooltip>
+                    <Tooltip text="Align Center"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="≣"/>
+                </graphic>
+            </ToggleButton>
+            <ToggleButton fx:id="alignRightButton" styleClass="format-button">
+                <tooltip>
+                    <Tooltip text="Align Right"/>
+                </tooltip>
+                <graphic>
+                    <Label styleClass="toolbar-icon" text="⫸"/>
+                </graphic>
+            </ToggleButton>
+        </items>
+    </ToolBar>
+
+    <!-- Rest of the FXML remains exactly the same -->
+    <!-- Search/Replace Bar -->
+    <HBox styleClass="search-bar" managed="${searchBarVisible}" visible="${searchBarVisible}" fx:id="searchBar">
+        <TextField fx:id="searchField" promptText="Find" HBox.hgrow="ALWAYS" onKeyTyped="#searchAndDisplayMatches"/>
+        <TextField fx:id="replaceField" promptText="Replace with" HBox.hgrow="ALWAYS"/>
+        <CheckBox fx:id="regexCheckBox" text="Regex"/>
+        <CheckBox fx:id="matchCaseCheckBox" text="Match case"/>
+        <Button text="Previous" styleClass="search-button" onAction="#displayPreviousMatch"/>
+        <Button text="Next" styleClass="search-button" onAction="#displayNextMatch"/>
+        <Button text="Replace" styleClass="search-button" onAction="#replaceCurrentMatch"/>
+        <Button text="Replace All" styleClass="search-button" onAction="#replaceAllMatches"/>
+        <Button styleClass="close-button">
+            <graphic>
+                <Label styleClass="toolbar-icon" text="✕"/>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <!-- Main Content Area with Sidebar -->
+    <SplitPane VBox.vgrow="ALWAYS">
+        <!-- Main Text Area -->
+        <TextArea fx:id="inputTextArea" styleClass="main-text-area" wrapText="true" onKeyTyped="#handleCountWord"/>
+
+        <!-- Right Sidebar -->
+        <VBox styleClass="sidebar" prefWidth="100" stylesheets="@css/guistyle.css">
+            <!-- Regular Expressions Section -->
+            <TitledPane text="Popular Regular Expressions" expanded="true">
+                <VBox spacing="10" styleClass="sidebar-section">
+                    <!-- Popular Regex List -->
+                    <ListView fx:id="regexListView" prefHeight="200" styleClass="regex-list" onMouseClicked="#handleQuickSearch">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Email (e.g., user@example.com)"/>
+                                <String fx:value="Phone Number (e.g., +1-800-555-1234)"/>
+                                <String fx:value="URL (e.g., https://www.example.com)"/>
+                                <String fx:value="Password (e.g., P@ssw0rd123)"/>
+                            </FXCollections>
+                        </items>
+                    </ListView>
+
+                    <!-- Regex Select and Apply -->
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Button text="Apply Regex" styleClass="search-button"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+
+            <!-- Matched Text Section -->
+            <TitledPane text="Matched Text" expanded="true">
+                <VBox spacing="10" styleClass="sidebar-section">
+                    <Label text="Matched Text"/>
+                    <TextArea fx:id="matchedTextArea"
+                              prefHeight="100" editable="false"
+                              wrapText="true"
+                              styleClass="matched-text-area"/>
+                </VBox>
+            </TitledPane>
+
+            <!-- Replaced Text Section -->
+            <TitledPane text="Replaced Text" expanded="false">
+                <VBox spacing="10" styleClass="sidebar-section">
+                    <Label text="Replaced Text"/>
+                    <TextArea fx:id="replacedTextArea" prefHeight="100" editable="false" styleClass="replaced-text-area"/>
+                </VBox>
+            </TitledPane>
+
+            <!-- To-Do Section -->
+            <TitledPane text="To-Do List" expanded="true">
+                <VBox spacing="10" styleClass="sidebar-section">
+                    <!-- Title Input -->
+                    <Label text="Title"/>
+                    <TextField fx:id="todoTitleField" promptText="Enter title..."/>
+
+                    <!-- Details Input -->
+                    <Label text="Details"/>
+                    <TextArea fx:id="todoDetailsArea" promptText="Enter details..." prefHeight="100"/>
+
+                    <!-- To-Do Actions -->
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Button text="Add To-Do" fx:id="addTodoButton" styleClass="todo-button" onAction="#addTaskItem"/>
+                        <Button text="Update To-Do" fx:id="updateTodoButton" styleClass="todo-button" onAction="#updateTaskItem"/>
+                        <Button text="Remove To-Do" fx:id="removeTodoButton" styleClass="todo-button" onAction="#removeTaskItem"/>
+                    </HBox>
+
+                    <!-- To-Do List View -->
+                    <ListView fx:id="todoListView" prefHeight="150" styleClass="todo-list" onMouseClicked="#viewTaskItemDetails"/>
+                </VBox>
+            </TitledPane>
+
+            <!-- History Section -->
+            <TitledPane text="History" expanded="false" VBox.vgrow="ALWAYS">
+                <VBox spacing="10" styleClass="sidebar-section">
+                    <!-- Filter for history -->
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="Filter:"/>
+                        <ComboBox fx:id="historyFilterCombo" promptText="All Operations">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="All Operations"/>
+                                    <String fx:value="Text Changes"/>
+                                    <String fx:value="Format Changes"/>
+                                    <String fx:value="File Operations"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    </HBox>
+
+                    <!-- History List -->
+                    <ListView fx:id="historyList" VBox.vgrow="ALWAYS" styleClass="history-list"/>
+
+                    <!-- History Actions -->
+                    <HBox spacing="5" alignment="CENTER_RIGHT">
+                        <Button text="Clear History" styleClass="history-button"/>
+                        <Button text="Undo Selected" styleClass="history-button" onAction="#undoSelectedAction"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+        </VBox>
+
+
+
+
+    </SplitPane>
+
+    <!-- Status Bar -->
+    <HBox styleClass="status-bar">
+        <Label fx:id="lineColumnLabel" text="Ln 1, Col 1"/>
+        <Separator orientation="VERTICAL"/>
+        <Label fx:id="wordCountLabel" text="Words: 0"/>
+        <Separator orientation="VERTICAL"/>
+        <Label fx:id="characterCountLabel" text="Characters: 0"/>
+        <Separator orientation="VERTICAL"/>
+        <Label fx:id="matchCaseCount" text="Characters: 0"/>
+        <Separator orientation="VERTICAL"/>
+        <Label fx:id="encodingLabel" text="UTF-8"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="zoomLabel" text="100%"/>
+    </HBox>
+</VBox>

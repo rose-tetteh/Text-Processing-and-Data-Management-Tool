@@ -11,4 +11,7 @@ module com.labs.textprocessor.textprocessor2 {
 
     opens com.labs.textprocessor to javafx.fxml;
     exports com.labs.textprocessor;
+
+    exports com.labs.textprocessor.controller to javafx.fxml;
+    opens com.labs.textprocessor.controller to javafx.fxml;
 }
