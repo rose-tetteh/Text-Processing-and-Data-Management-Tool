@@ -23,10 +23,8 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -40,6 +38,7 @@ public class UIController implements Initializable {
     public Label wordCountLabel;
     public Label lineColumnLabel;
     public Label characterCountLabel;
+    public TextField replaceField;
     @FXML
     private TextArea matchedTextArea;
     @FXML
@@ -89,6 +88,7 @@ public class UIController implements Initializable {
     }
 
     private final RegexOperations regexOperations = new RegexOperations();
+    private final ArrayDeque<String> replacedMatches = new ArrayDeque<>(); // Store replaced matches for history tracking
 
     private final TextFileService textFileService;
 
@@ -396,9 +396,93 @@ public class UIController implements Initializable {
     }
 
     public void replaceCurrentMatch(ActionEvent actionEvent) {
+        // Check if there are any matches to replace
+        if (matchedTexts.isEmpty()) {
+            matchedTextArea.setText("No match to replace");
+            return;
+        }
+
+        // Validate the replacement text
+        String replacement = replaceField.getText();
+        if (replacement == null || replacement.isEmpty()) {
+            matchedTextArea.setText("Replacement text is empty");
+            return;
+        }
+
+        // Get the current match from the matchedTextArea or matchedTexts list
+        String currentMatch = matchedTextArea.getText();
+        if (!currentMatch.equals(matchedTexts.get(currentIndex))) {
+            currentMatch = matchedTexts.get(currentIndex); // Fall back to the current index in matchedTexts
+        }
+
+        // Retrieve the input text
+        String inputText = mainTextArea.getText();
+        if (inputText == null || inputText.isEmpty()) {
+            matchedTextArea.setText("Input text is empty");
+            return;
+        }
+
+        String updatedText = regexOperations.replace(inputText,currentMatch,replacement);
+
+        mainTextArea.setText(updatedText);
+
+        matchedTexts.set(currentIndex,replacement);
+
+        // Update UI components to reflect the replacement
+        replacedTextArea.setText("Old word: " + currentMatch + "\n\nNew word: " + replacement);
+        matchedTextArea.setText(replacement);
+
     }
 
-    public void replaceAllMatches(ActionEvent actionEvent) {
+    @FXML
+    private void replaceAllMatches(ActionEvent actionEvent) {
+
+        // Check if there are any matches to replace
+        if (matchedTexts.isEmpty()) {
+            matchedTextArea.setText("No matches to replace");
+            return;
+        }
+
+        // Validate the replacement text
+        String replacement = replaceField.getText();
+        if (replacement == null || replacement.isEmpty()) {
+            matchedTextArea.setText("Replacement text is empty");
+            return;
+        }
+
+        // Retrieve the input text
+        String inputText = mainTextArea.getText();
+        if (inputText == null || inputText.isEmpty()) {
+            matchedTextArea.setText("Input text is empty");
+            return;
+        }
+
+        // Create an instance of RegexOperations (if not already available)
+        RegexOperations regexOps = new RegexOperations();
+
+        // Use a StringBuilder for efficient string manipulation
+        StringBuilder updatedText = new StringBuilder(inputText);
+
+        // Iterate through matched texts and replace them in the input text
+        for (String match : matchedTexts) {
+            // Use the replaceAll method from RegexOperations to replace all occurrences of the match
+            String result = regexOps.replaceAll(updatedText.toString(), match, replacement);
+
+            // Update the StringBuilder with the result from the replacement
+            updatedText.setLength(0); // Clear the previous content
+            updatedText.append(result);
+
+            // Track the replaced match for history
+            replacedMatches.add(match);
+        }
+
+        // Update UI components with the new state
+        mainTextArea.setText(updatedText.toString()); // Update input area with replaced text
+        replacedTextArea.setText("All matches replaced with: " + replacement); // Display replacement summary
+        matchedTextArea.setText("All matches replaced"); // Clear matched texts display
+
+        matchedTexts.clear(); // Clear the list of matched texts
+
     }
 
     public void handleCountWord(KeyEvent keyEvent) {

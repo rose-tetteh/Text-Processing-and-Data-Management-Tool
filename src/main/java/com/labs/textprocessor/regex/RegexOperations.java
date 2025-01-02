@@ -49,13 +49,13 @@ public class RegexOperations {
     /**
      * Replaces the first occurrence of the pattern in the input string with the replacement string.
      *
-     * @param input       The input string.
-     * @param pattern     The regex pattern to replace.
+     * @param inputText       The input string.
+     * @param currentMatch   The regex pattern to replace.
      * @param replacement The replacement string.
      * @return The resulting string after replacement.
      */
-    public String replace(String input, String pattern, String replacement) {
-        return input.replaceFirst(pattern, replacement);
+    public String replace(String inputText,String currentMatch, String replacement) {
+        return inputText.replaceFirst(Pattern.quote(currentMatch), replacement);
     }
 
     /**
