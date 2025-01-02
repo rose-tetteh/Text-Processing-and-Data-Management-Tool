@@ -1,15 +1,20 @@
 package com.labs.textprocessor.controller;
 
+import com.labs.textprocessor.datamanagement.DataManager;
+import com.labs.textprocessor.datamanagement.Task;
 import com.labs.textprocessor.regex.RegexOperations;
 import com.labs.textprocessor.regex.TextFileService;
 
 import com.labs.textprocessor.utils.FileOperationResult;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -26,6 +31,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
@@ -39,6 +45,17 @@ public class UIController implements Initializable {
     public Label lineColumnLabel;
     public Label characterCountLabel;
     public TextField replaceField;
+    public ComboBox<String> historyFilterCombo;
+    @FXML private ListView<String> historyList;
+    @FXML private ListView<String> taskListView;
+    @FXML private TextField taskTitleField;
+    @FXML private TextArea taskDetailsArea;
+    private final ObservableList<String> historyItems = FXCollections.observableArrayList();
+    private final Map<String, ArrayList<String>> undoMap = new LinkedHashMap<>();
+
+    @FXML private Button addTaskButton;
+    @FXML private Button updateTaskButton;
+    @FXML private Button removeTaskButton;
     @FXML
     private TextArea matchedTextArea;
     @FXML
@@ -93,8 +110,10 @@ public class UIController implements Initializable {
     private final TextFileService textFileService;
 
     private ArrayList<String> matchedTexts = new ArrayList<>();
+    private final DataManager dataManager = new DataManager();
 
     private int currentIndex = 0;
+    private static int TASK_PRIORITY = 0;
 
     public UIController() {
         this.textFileService = new TextFileService();
@@ -432,6 +451,11 @@ public class UIController implements Initializable {
         replacedTextArea.setText("Old word: " + currentMatch + "\n\nNew word: " + replacement);
         matchedTextArea.setText(replacement);
 
+        // Log the replacement action in history for undo functionality
+        ArrayDeque<String> replacedMatches = new ArrayDeque<>();
+        replacedMatches.add(currentMatch); // Only the current match is being replaced
+        addToHistory(replacedMatches, replacement);
+
     }
 
     @FXML
@@ -482,6 +506,8 @@ public class UIController implements Initializable {
         matchedTextArea.setText("All matches replaced"); // Clear matched texts display
 
         matchedTexts.clear(); // Clear the list of matched texts
+        addToHistory(replacedMatches, replacement); // Log replacement action in history
+
 
     }
 
@@ -523,18 +549,233 @@ public class UIController implements Initializable {
     public void handleQuickSearch(MouseEvent mouseEvent) {
     }
 
-    public void addTaskItem(ActionEvent actionEvent) {
+    @FXML
+    private void addTaskItem(ActionEvent actionEvent) {
+
+        String taskName = taskTitleField.getText();
+        String taskDetails = taskDetailsArea.getText();
+
+        // Validation
+        if(taskName.isEmpty() || taskDetails.isEmpty()){
+            showErrorAlert("Error", "Both title and details are required" );
+            return;
+        }
+
+        // Create a new Task Item and add it to the map.
+        dataManager.createTask(taskName,taskDetails,++TASK_PRIORITY);
+
+        updateTaskListView();
+
+
+    }
+
+    private void updateTaskListView() {
+        ObservableList<String>  taskList = FXCollections.observableArrayList(dataManager.getAllTasks().keySet());
+        taskListView.setItems(taskList);
     }
 
     public void removeTaskItem(ActionEvent actionEvent) {
+        String selectedTask = taskListView.getSelectionModel().getSelectedItem();
+
+        // Ensure an item is selected
+        if(selectedTask == null){
+            showErrorAlert("Error", "No item selected to remove.");
+            return;
+        }
+
+        // Remove the item from the map.
+        dataManager.getAllTasks().remove(selectedTask);
+
+        // Update the ListView
+        updateTaskListView();
     }
 
     public void updateTaskItem(ActionEvent actionEvent) {
+
+        // Retrieve the selected title from the ListView
+        String selectedTitle = taskListView.getSelectionModel().getSelectedItem();
+
+//      Retrieve the updated details from the text area
+        String updatedDetails = taskDetailsArea.getText();
+
+//      Validate user input: Ensure an item is selected and details are provided
+        if (selectedTitle == null || updatedDetails.isBlank()) {
+            showErrorAlert("Error", "Please select an item and provide details to update");
+            return;
+        }
+
+//      Retrieve the Todo item from the data structure
+        Task taskItem = dataManager.getTaskById(selectedTitle);
+
+//      Handle case where the selected item is not found in the map
+        if (taskItem == null) {
+            showErrorAlert("Error", "Selected item does not exist.");
+            return;
+        }
+
+//      Update the details of the selected Todo item
+        dataManager.updateTask(selectedTitle,updatedDetails,taskItem.getPriority());
+
+
+
+//      Clear the details area for better user experience
+        taskDetailsArea.clear();
+
+//      Notify the user of a successful update
+        showInfoAlert("Success", "Todo item updated successfully.");
+
+
+
+    }
+
+    /**
+     * Displays an informational alert to the user.
+     *
+     * @param title   the title of the alert dialog.
+     * @param message the message to be displayed in the alert dialog.
+     */
+    private void showInfoAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION); // Create an informational alert
+        alert.setTitle(title); // Set the title
+        alert.setHeaderText(null); // No header text for simplicity
+        alert.setContentText(message); // Set the content/message
+        alert.showAndWait(); // Display the alert and wait for user acknowledgment
     }
 
     public void viewTaskItemDetails(MouseEvent mouseEvent) {
+
+        // Get the selected item from the ListView
+        String selectedItem = taskListView.getSelectionModel().getSelectedItem();
+
+        if (selectedItem == null || selectedItem.isEmpty()) {
+            showErrorAlert("Error", "No item selected to view details.");
+            return;
+        }
+
+        // Use regex to extract the title after the timestamp
+        Pattern pattern = Pattern.compile("[A-Za-z]+");
+        Matcher matcher = pattern.matcher(selectedItem);
+
+        if (matcher.find()) {
+            String title = matcher.group(); // Extract the title after the timestamp
+
+            // Fetch the corresponding TodoItem from the map
+            Task taskItem = dataManager.getTaskById(title);
+
+            if (taskItem != null) {
+                taskTitleField.setEditable(false);
+                taskTitleField.clear();
+                taskTitleField.setText(taskItem.getTaskId());
+//                todoDetailsArea.setEditable(false);
+                taskDetailsArea.clear();
+                taskDetailsArea.setText(taskItem.getDescription());
+            } else {
+                showErrorAlert("Error", "Todo item not found.");
+            }
+        } else {
+            showErrorAlert("Error", "Invalid item format.");
+        }
     }
 
-    public void undoSelectedAction(ActionEvent actionEvent) {
+    /**
+     * Adds an entry to the history list for the given replacement operation.
+     *
+     * @param matches     the original matches that were replaced
+     * @param replacement the text that replaced the original matches
+     */
+    private void addToHistory(Deque<String> matches, String replacement) {
+        // Create a history entry
+        String historyEntry = matches.size() == 1
+                ? "Replaced '" + matches.peek() + "' with '" + replacement + "'"
+                : "Replaced multiple matches with '" + replacement + "'";
+
+        // Add the new entry to the top of the history
+        historyItems.add(0, historyEntry);
+
+        // Store matches for undo functionality
+        undoMap.put(historyEntry, new ArrayList<>(matches));
+    }
+
+
+    /**
+     * Undoes the selected replacement operation from the history.
+     * Restores the original matches and updates the input text area.
+     */
+    @FXML
+    private void undoSelectedAction() {
+        // Retrieve the selected history entry
+        String selectedHistory = historyList.getSelectionModel().getSelectedItem();
+        if (selectedHistory == null) {
+            matchedTextArea.setText("No operation selected for undo");
+            return;
+        }
+
+        // Extract the replacement text from the history entry
+        String replacement = extractReplacementFromHistory(selectedHistory);
+        if (replacement == null) {
+            matchedTextArea.setText("Invalid history entry format");
+            return;
+        }
+
+        // Retrieve the original matches for the selected history entry
+        List<String> originalMatches = undoMap.get(selectedHistory);
+        if (originalMatches == null || originalMatches.isEmpty()) {
+            matchedTextArea.setText("Unable to undo the selected action");
+            return;
+        }
+
+        // Undo the replacement in the input text
+        restoreOriginalMatches(originalMatches, replacement);
+
+        // Update the history and undoMap
+        removeHistoryEntry(selectedHistory);
+
+        matchedTextArea.setText("Undo successful: Restored original matches");
+    }
+
+    /**
+     * Extracts the replacement text from a history entry using regex.
+     *
+     * @param historyEntry the history entry to parse
+     * @return the replacement text, or null if the format is invalid
+     */
+    private String extractReplacementFromHistory(String historyEntry) {
+        Pattern pattern = Pattern.compile("Replaced.*with '(.*)'");
+        Matcher matcher = pattern.matcher(historyEntry);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null; // Invalid format
+    }
+
+
+    /**
+     * Restores the original matches in the input text area by replacing the replacement text.
+     *
+     * @param originalMatches the original matches to restore
+     * @param replacement     the replacement text to be replaced
+     */
+    private void restoreOriginalMatches(List<String> originalMatches, String replacement) {
+        String inputText = mainTextArea.getText();
+
+        // Replace each occurrence of the replacement text with its corresponding original match
+        for (String originalMatch : originalMatches) {
+            inputText = inputText.replace(replacement, originalMatch);
+        }
+        mainTextArea.setText(inputText); // Update the input text area
+        matchedTexts.clear();
+        matchedTexts.addAll(originalMatches);
+    }
+
+
+    /**
+     * Removes a history entry and its associated undo data.
+     *
+     * @param historyEntry the history entry to remove
+     */
+    private void removeHistoryEntry(String historyEntry) {
+        historyItems.remove(historyEntry);
+        undoMap.remove(historyEntry);
     }
 }

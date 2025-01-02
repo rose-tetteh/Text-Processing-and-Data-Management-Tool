@@ -242,21 +242,21 @@
                 <VBox spacing="10" styleClass="sidebar-section">
                     <!-- Title Input -->
                     <Label text="Title"/>
-                    <TextField fx:id="todoTitleField" promptText="Enter title..."/>
+                    <TextField fx:id="taskTitleField" promptText="Enter title..."/>
 
                     <!-- Details Input -->
                     <Label text="Details"/>
-                    <TextArea fx:id="todoDetailsArea" promptText="Enter details..." prefHeight="100"/>
+                    <TextArea fx:id="taskDetailsArea" promptText="Enter details..." prefHeight="100"/>
 
                     <!-- To-Do Actions -->
                     <HBox spacing="5" alignment="CENTER_LEFT">
-                        <Button text="Add To-Do" fx:id="addTodoButton" styleClass="todo-button" onAction="#addTaskItem"/>
-                        <Button text="Update To-Do" fx:id="updateTodoButton" styleClass="todo-button" onAction="#updateTaskItem"/>
-                        <Button text="Remove To-Do" fx:id="removeTodoButton" styleClass="todo-button" onAction="#removeTaskItem"/>
+                        <Button text="Add Task" fx:id="addTaskButton" styleClass="todo-button" onAction="#addTaskItem"/>
+                        <Button text="Update Task" fx:id="updateTaskButton" styleClass="todo-button" onAction="#updateTaskItem"/>
+                        <Button text="Remove Task" fx:id="removeTaskButton" styleClass="todo-button" onAction="#removeTaskItem"/>
                     </HBox>
 
                     <!-- To-Do List View -->
-                    <ListView fx:id="todoListView" prefHeight="150" styleClass="todo-list" onMouseClicked="#viewTaskItemDetails"/>
+                    <ListView fx:id="taskListView" prefHeight="150" styleClass="todo-list" onMouseClicked="#viewTaskItemDetails"/>
                 </VBox>
             </TitledPane>
 
