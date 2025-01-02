@@ -105,6 +105,7 @@ public class UIController implements Initializable {
 
 
 
+
     public void handleOpenOptionClicked(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
