@@ -27,14 +27,14 @@ public class DataManager {
     /**
      * Create task.
      *
-     * @param taskId      the task id
+     * @param taskName      the task id
      * @param description the description
      * @param priority    the priority
      */
-    public void createTask(String taskId, String description, int priority) {
-        Task task = new Task(taskId, description, priority);
+    public void createTask(String taskName, String description, int priority) {
+        Task task = new Task(taskName, description, priority);
         taskSet.add(task);
-        taskMap.put(taskId, task);
+        taskMap.put(taskName, task);
     }
 
     /**
@@ -75,8 +75,8 @@ public class DataManager {
      *
      * @return the all tasks
      */
-    public Set<Task> getAllTasks() {
-        return taskSet;
+    public Map<String, Task> getAllTasks() {
+        return taskMap;
     }
 
     /**

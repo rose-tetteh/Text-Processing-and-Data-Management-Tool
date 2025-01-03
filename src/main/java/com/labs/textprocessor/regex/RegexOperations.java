@@ -37,25 +37,25 @@ public class RegexOperations {
      * @param pattern The regex pattern to search for.
      * @return An array of all matches found, or an empty array if no matches are found.
      */
-    public String[] findAll(String input, String pattern) {
+    public ArrayList<String> findAll(String input, String pattern) {
         Matcher matcher = Pattern.compile(pattern).matcher(input);
-        List<String> matches = new ArrayList<>();
+        ArrayList<String> matches = new ArrayList<>();
         while (matcher.find()) {
             matches.add(matcher.group());
         }
-        return matches.toArray(new String[0]);
+        return matches;
     }
 
     /**
      * Replaces the first occurrence of the pattern in the input string with the replacement string.
      *
-     * @param input       The input string.
-     * @param pattern     The regex pattern to replace.
+     * @param inputText       The input string.
+     * @param currentMatch   The regex pattern to replace.
      * @param replacement The replacement string.
      * @return The resulting string after replacement.
      */
-    public String replace(String input, String pattern, String replacement) {
-        return input.replaceFirst(pattern, replacement);
+    public String replace(String inputText,String currentMatch, String replacement) {
+        return inputText.replaceFirst(Pattern.quote(currentMatch), replacement);
     }
 
     /**

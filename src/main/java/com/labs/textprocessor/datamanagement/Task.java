@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public class Task {
     // Unique task identifier
-    private String taskId;
+    private String taskName;
 
     // Task description
     private String description;
@@ -18,12 +18,12 @@ public class Task {
     /**
      * Instantiates a new Task.
      *
-     * @param taskId      the task id
+     * @param taskName      the task id
      * @param description the description
      * @param priority    the priority
      */
-    public Task(String taskId, String description, int priority) {
-        this.taskId = taskId;
+    public Task(String taskName, String description, int priority) {
+        this.taskName = taskName;
         this.description = description;
         this.priority = priority;
     }
@@ -35,16 +35,16 @@ public class Task {
      */
 // Getters and setters
     public String getTaskId() {
-        return taskId;
+        return taskName;
     }
 
     /**
      * Sets task id.
      *
-     * @param taskId the task id
+     * @param taskName the task id
      */
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
+    public void setTaskId(String taskName) {
+        this.taskName = taskName;
     }
 
     /**
@@ -88,16 +88,16 @@ public class Task {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Task task = (Task) obj;
-        return taskId.equals(task.taskId);
+        return taskName.equals(task.taskName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(taskId);
+        return Objects.hash(taskName);
     }
 
     @Override
     public String toString() {
-        return "Task [taskId=" + taskId + ", description=" + description + ", priority=" + priority + "]";
+        return "Task [taskName=" + taskName + ", description=" + description + ", priority=" + priority + "]";
     }
 }
