@@ -36,19 +36,58 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
+/**
+ * The type Ui controller.
+ */
 public class UIController implements Initializable {
 
+    /**
+     * The Main text area.
+     */
     public TextArea mainTextArea;
+    /**
+     * The Regex check box.
+     */
     public CheckBox regexCheckBox;
+    /**
+     * The Match case check box.
+     */
     public CheckBox matchCaseCheckBox;
+    /**
+     * The Word count label.
+     */
     public Label wordCountLabel;
+    /**
+     * The Line column label.
+     */
     public Label lineColumnLabel;
+    /**
+     * The Character count label.
+     */
     public Label characterCountLabel;
+    /**
+     * The Replace field.
+     */
     public TextField replaceField;
+    /**
+     * The History filter combo.
+     */
     public ComboBox<String> historyFilterCombo;
+    /**
+     * The Save button.
+     */
     public Button saveButton;
+    /**
+     * The Recent files button.
+     */
     public MenuButton recentFilesButton;
+    /**
+     * The Undo button.
+     */
     public Button undoButton;
+    /**
+     * The Redo button.
+     */
     public Button redoButton;
     @FXML private ListView<String> historyList;
     @FXML private ListView<String> taskListView;
@@ -102,7 +141,11 @@ public class UIController implements Initializable {
     private BooleanProperty searchBarVisible = new SimpleBooleanProperty(true);
 
 
-
+    /**
+     * Search bar visible property boolean property.
+     *
+     * @return the boolean property
+     */
     @FXML
     public BooleanProperty searchBarVisibleProperty() {
         return searchBarVisible;
@@ -119,6 +162,9 @@ public class UIController implements Initializable {
     private int currentIndex = 0;
     private static int TASK_PRIORITY = 0;
 
+    /**
+     * Instantiates a new Ui controller.
+     */
     public UIController() {
         this.textFileService = new TextFileService();
     }
@@ -181,6 +227,8 @@ public class UIController implements Initializable {
 
     /**
      * Handle the open option clicked (open a file and display content in TextArea).
+     *
+     * @param actionEvent the action event
      */
     @FXML
     public void handleOpenOptionClicked(ActionEvent actionEvent) {
@@ -204,6 +252,8 @@ public class UIController implements Initializable {
 
     /**
      * Handle the save option clicked (save the content of TextArea to a file).
+     *
+     * @param actionEvent the action event
      */
     @FXML
     public void handleSaveOptionClicked(ActionEvent actionEvent) {
@@ -342,6 +392,11 @@ public class UIController implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * Search and display matches.
+     *
+     * @param keyEvent the key event
+     */
     public void searchAndDisplayMatches(KeyEvent keyEvent) {
 
         matchedTextArea.clear();
@@ -391,6 +446,11 @@ public class UIController implements Initializable {
 
     }
 
+    /**
+     * Display previous match.
+     *
+     * @param actionEvent the action event
+     */
     public void displayPreviousMatch(ActionEvent actionEvent) {
         // Check if there are previous matches
         if (!matchedTexts.isEmpty() && currentIndex > 0) {
@@ -400,6 +460,11 @@ public class UIController implements Initializable {
         }
     }
 
+    /**
+     * Display next match.
+     *
+     * @param actionEvent the action event
+     */
     public void displayNextMatch(ActionEvent actionEvent) {
         if(!matchedTexts.isEmpty() && currentIndex < matchedTexts.size() -1){
             currentIndex++;
@@ -408,6 +473,11 @@ public class UIController implements Initializable {
         }
     }
 
+    /**
+     * Replace current match.
+     *
+     * @param actionEvent the action event
+     */
     public void replaceCurrentMatch(ActionEvent actionEvent) {
         // Check if there are any matches to replace
         if (matchedTexts.isEmpty()) {
@@ -455,20 +525,17 @@ public class UIController implements Initializable {
     @FXML
     private void replaceAllMatches(ActionEvent actionEvent) {
 
-        // Check if there are any matches to replace
         if (matchedTexts.isEmpty()) {
             matchedTextArea.setText("No matches to replace");
             return;
         }
 
-        // Validate the replacement text
         String replacement = replaceField.getText();
         if (replacement == null || replacement.isEmpty()) {
             matchedTextArea.setText("Replacement text is empty");
             return;
         }
 
-        // Retrieve the input text
         String inputText = mainTextArea.getText();
         if (inputText == null || inputText.isEmpty()) {
             matchedTextArea.setText("Input text is empty");
@@ -477,17 +544,13 @@ public class UIController implements Initializable {
 
         // Create an instance of RegexOperations (if not already available)
         RegexOperations regexOps = new RegexOperations();
-
-        // Use a StringBuilder for efficient string manipulation
         StringBuilder updatedText = new StringBuilder(inputText);
 
-        // Iterate through matched texts and replace them in the input text
         for (String match : matchedTexts) {
-            // Use the replaceAll method from RegexOperations to replace all occurrences of the match
             String result = regexOps.replaceAll(updatedText.toString(), match, replacement);
 
             // Update the StringBuilder with the result from the replacement
-            updatedText.setLength(0); // Clear the previous content
+            updatedText.setLength(0);
             updatedText.append(result);
 
             // Track the replaced match for history
@@ -495,16 +558,21 @@ public class UIController implements Initializable {
         }
 
         // Update UI components with the new state
-        mainTextArea.setText(updatedText.toString()); // Update input area with replaced text
-        replacedTextArea.setText("All matches replaced with: " + replacement); // Display replacement summary
-        matchedTextArea.setText("All matches replaced"); // Clear matched texts display
+        mainTextArea.setText(updatedText.toString());
+        replacedTextArea.setText("All matches replaced with: " + replacement);
+        matchedTextArea.setText("All matches replaced");
 
-        matchedTexts.clear(); // Clear the list of matched texts
-        addToHistory(replacedMatches, replacement); // Log replacement action in history
+        matchedTexts.clear();
+        addToHistory(replacedMatches, replacement);
 
 
     }
 
+    /**
+     * Handle count word.
+     *
+     * @param keyEvent the key event
+     */
     public void handleCountWord(KeyEvent keyEvent) {
         int numOfLines = getLineNumber();
 
@@ -519,16 +587,9 @@ public class UIController implements Initializable {
             currentColumn = lines[lines.length -1].length();
         }
 
-
-
-
         String[] words = mainTextArea.getText().split("\\s");
         wordCountLabel.setText("Word Count: "+words.length);
 
-
-
-//        System.out.println("Lines = "+lines.length);
-//        System.out.println("Column "+ currentColumn);
         lineColumnLabel.setText("Ln "+numOfLines+ ", Col "+currentColumn);
 
         characterCountLabel.setText("Characters: "+mainTextArea.getText().length());
@@ -540,27 +601,65 @@ public class UIController implements Initializable {
         return lines.length;
     }
 
+    /**
+     * Handle quick search.
+     *
+     * @param mouseEvent the mouse event
+     */
     public void handleQuickSearch(MouseEvent mouseEvent) {
     }
 
     @FXML
     private void addTaskItem(ActionEvent actionEvent) {
-
+        boolean taskCreated = false;
         String taskName = taskTitleField.getText();
         String taskDetails = taskDetailsArea.getText();
 
-        // Validation
-        if(taskName.isEmpty() || taskDetails.isEmpty()){
-            showErrorAlert("Error", "Both title and details are required" );
-            return;
+        // Initial validation
+        while (!taskCreated) {
+            if (taskName.isEmpty() || taskDetails.isEmpty()) {
+                showErrorAlert("Error", "Both title and details are required");
+                return;
+            }
+
+            try {
+                // Attempt to create the task
+                dataManager.createTask(taskName, taskDetails, ++TASK_PRIORITY);
+                taskCreated = true;
+
+                // Clear fields and update view on success
+                clearInputFields();
+                updateTaskListView();
+
+            } catch (Exception e) {
+                if (e.getMessage().contains("already exists")) {
+                    // Show input dialog for new task name
+                    TextInputDialog dialog = new TextInputDialog(taskName);
+                    dialog.setTitle("Duplicate Task");
+                    dialog.setHeaderText("A task with this name already exists");
+                    dialog.setContentText("Please enter a different task name:");
+
+                    Optional<String> result = dialog.showAndWait();
+                    if (result.isPresent()) {
+                        taskName = result.get().trim();
+                        if (taskName.isEmpty()) {
+                            showErrorAlert("Error", "Task name cannot be empty");
+                            return;
+                        }
+                    } else {
+                        return;
+                    }
+                } else {
+                    showErrorAlert("Error", "Failed to create task: " + e.getMessage());
+                    return;
+                }
+            }
         }
+    }
 
-        // Create a new Task Item and add it to the map.
-        dataManager.createTask(taskName,taskDetails,++TASK_PRIORITY);
-
-        updateTaskListView();
-
-
+    private void clearInputFields() {
+        taskTitleField.clear();
+        taskDetailsArea.clear();
     }
 
     private void updateTaskListView() {
@@ -568,58 +667,52 @@ public class UIController implements Initializable {
         taskListView.setItems(taskList);
     }
 
+    /**
+     * Remove task item.
+     *
+     * @param actionEvent the action event
+     */
     public void removeTaskItem(ActionEvent actionEvent) {
         String selectedTask = taskListView.getSelectionModel().getSelectedItem();
 
-        // Ensure an item is selected
         if(selectedTask == null){
             showErrorAlert("Error", "No item selected to remove.");
             return;
         }
 
-        // Remove the item from the map.
-        dataManager.getAllTasks().remove(selectedTask);
+        dataManager.deleteTask(selectedTask);
 
-        // Update the ListView
         updateTaskListView();
     }
 
+    /**
+     * Update task item.
+     *
+     * @param actionEvent the action event
+     */
     public void updateTaskItem(ActionEvent actionEvent) {
 
-        // Retrieve the selected title from the ListView
         String selectedTitle = taskListView.getSelectionModel().getSelectedItem();
 
-//      Retrieve the updated details from the text area
         String updatedDetails = taskDetailsArea.getText();
 
-//      Validate user input: Ensure an item is selected and details are provided
         if (selectedTitle == null || updatedDetails.isBlank()) {
             showErrorAlert("Error", "Please select an item and provide details to update");
             return;
         }
 
-//      Retrieve the Todo item from the data structure
         Task taskItem = dataManager.getTaskById(selectedTitle);
 
-//      Handle case where the selected item is not found in the map
         if (taskItem == null) {
             showErrorAlert("Error", "Selected item does not exist.");
             return;
         }
 
-//      Update the details of the selected Todo item
         dataManager.updateTask(selectedTitle,updatedDetails,taskItem.getPriority());
 
-
-
-//      Clear the details area for better user experience
         taskDetailsArea.clear();
 
-//      Notify the user of a successful update
         showInfoAlert("Success", "Todo item updated successfully.");
-
-
-
     }
 
     /**
@@ -636,6 +729,11 @@ public class UIController implements Initializable {
         alert.showAndWait(); // Display the alert and wait for user acknowledgment
     }
 
+    /**
+     * View task item details.
+     *
+     * @param mouseEvent the mouse event
+     */
     public void viewTaskItemDetails(MouseEvent mouseEvent) {
 
         // Get the selected item from the ListView
