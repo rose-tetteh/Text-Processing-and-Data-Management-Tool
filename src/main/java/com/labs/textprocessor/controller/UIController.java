@@ -545,22 +545,57 @@ public class UIController implements Initializable {
 
     @FXML
     private void addTaskItem(ActionEvent actionEvent) {
-
+        boolean taskCreated = false;
         String taskName = taskTitleField.getText();
         String taskDetails = taskDetailsArea.getText();
 
-        // Validation
-        if(taskName.isEmpty() || taskDetails.isEmpty()){
-            showErrorAlert("Error", "Both title and details are required" );
-            return;
+        // Initial validation
+        while (!taskCreated) {
+            if (taskName.isEmpty() || taskDetails.isEmpty()) {
+                showErrorAlert("Error", "Both title and details are required");
+                return;
+            }
+
+            try {
+                // Attempt to create the task
+                dataManager.createTask(taskName, taskDetails, ++TASK_PRIORITY);
+                taskCreated = true;
+
+                // Clear fields and update view on success
+                clearInputFields();
+                updateTaskListView();
+
+            } catch (Exception e) {
+                if (e.getMessage().contains("already exists")) {
+                    // Show input dialog for new task name
+                    TextInputDialog dialog = new TextInputDialog(taskName);
+                    dialog.setTitle("Duplicate Task");
+                    dialog.setHeaderText("A task with this name already exists");
+                    dialog.setContentText("Please enter a different task name:");
+
+                    Optional<String> result = dialog.showAndWait();
+                    if (result.isPresent()) {
+                        taskName = result.get().trim();
+                        if (taskName.isEmpty()) {
+                            showErrorAlert("Error", "Task name cannot be empty");
+                            return;
+                        }
+                    } else {
+                        // User clicked cancel
+                        return;
+                    }
+                } else {
+                    // Handle other potential errors
+                    showErrorAlert("Error", "Failed to create task: " + e.getMessage());
+                    return;
+                }
+            }
         }
+    }
 
-        // Create a new Task Item and add it to the map.
-        dataManager.createTask(taskName,taskDetails,++TASK_PRIORITY);
-
-        updateTaskListView();
-
-
+    private void clearInputFields() {
+        taskTitleField.clear();
+        taskDetailsArea.clear();
     }
 
     private void updateTaskListView() {
@@ -586,28 +621,22 @@ public class UIController implements Initializable {
 
     public void updateTaskItem(ActionEvent actionEvent) {
 
-        // Retrieve the selected title from the ListView
         String selectedTitle = taskListView.getSelectionModel().getSelectedItem();
 
-//      Retrieve the updated details from the text area
         String updatedDetails = taskDetailsArea.getText();
 
-//      Validate user input: Ensure an item is selected and details are provided
         if (selectedTitle == null || updatedDetails.isBlank()) {
             showErrorAlert("Error", "Please select an item and provide details to update");
             return;
         }
 
-//      Retrieve the Todo item from the data structure
         Task taskItem = dataManager.getTaskById(selectedTitle);
 
-//      Handle case where the selected item is not found in the map
         if (taskItem == null) {
             showErrorAlert("Error", "Selected item does not exist.");
             return;
         }
 
-//      Update the details of the selected Todo item
         dataManager.updateTask(selectedTitle,updatedDetails,taskItem.getPriority());
 
 
