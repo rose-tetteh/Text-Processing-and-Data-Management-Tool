@@ -5,15 +5,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * The type Data manager.
- */
+
 public class DataManager {
 
-    // Set to store unique tasks
     private Set<Task> taskSet;
-
-    // Map to store tasks by their ID for quick access
     private Map<String, Task> taskMap;
 
     /**

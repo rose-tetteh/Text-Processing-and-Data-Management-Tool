@@ -46,6 +46,10 @@ public class UIController implements Initializable {
     public Label characterCountLabel;
     public TextField replaceField;
     public ComboBox<String> historyFilterCombo;
+    public Button saveButton;
+    public MenuButton recentFilesButton;
+    public Button undoButton;
+    public Button redoButton;
     @FXML private ListView<String> historyList;
     @FXML private ListView<String> taskListView;
     @FXML private TextField taskTitleField;
@@ -96,7 +100,7 @@ public class UIController implements Initializable {
 
     @FXML
     private BooleanProperty searchBarVisible = new SimpleBooleanProperty(true);
-  
+
 
 
     @FXML
@@ -146,7 +150,6 @@ public class UIController implements Initializable {
             throw new IllegalStateException("FontBox not initialized");
         }
 
-        // Direct retrieval and addition to ComboBox items
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         List<String> fontList = Arrays.stream(ge.getAvailableFontFamilyNames())
                 .sorted()
@@ -160,7 +163,7 @@ public class UIController implements Initializable {
      * Sets up the font size combo box with predefined size options.
      * This method initializes the font size dropdown with common font sizes
      * and sets a default size value.
-     *
+     * Uses immutable list for predefined sizes
      * @throws IllegalStateException if the FontSizeBox is not properly initialized
      */
     @FXML
@@ -169,7 +172,6 @@ public class UIController implements Initializable {
             throw new IllegalStateException("FontSizeBox not initialized");
         }
 
-        // Using immutable list for predefined sizes
         final List<Integer> FONT_SIZES = List.of(8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72);
 
         fontSizeBox.getItems().setAll(FONT_SIZES);
@@ -186,19 +188,15 @@ public class UIController implements Initializable {
         fileChooser.setTitle("Open File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
-        // Show open file dialog
         Stage stage = (Stage) mainTextArea.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) {
-            // Call textFileService to read the file
             FileOperationResult<String> result = textFileService.readFile(file.toPath());
 
-            if (result.isSuccess()) { // Use the isSuccess() method to check success
-                // If successful, set the content in the TextArea
+            if (result.isSuccess()) {
                 mainTextArea.setText(result.getData());
             } else {
-                // If error, show an alert or log the error message
                 System.out.println("Error reading file: " + result.getError());
             }
         }
@@ -213,49 +211,45 @@ public class UIController implements Initializable {
         fileChooser.setTitle("Save File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
-        // Show save file dialog
         Stage stage = (Stage) mainTextArea.getScene().getWindow();
         File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {
-            // Get content from TextArea
             String content = mainTextArea.getText();
 
-            // Call textFileService to write the content to the selected file
             FileOperationResult<Void> result = textFileService.writeFile(file.toPath(), content);
 
             if (result.isSuccess()) {
-                // If successful, show a confirmation or log
                 System.out.println("File saved successfully!");
             } else {
-                // If error, show an alert or log the error message
                 System.out.println("Error saving file: " + result.getError());
             }
         }
     }
 
 
+    /**
+     * Apply formatting.
+     *
+     * @param actionEvent the action event
+     */
     public void applyFormatting(ActionEvent actionEvent) {
         IndexRange selection = mainTextArea.getSelection();
         if (selection.getLength() > 0) {
-            // Store the current style of the TextArea
             String currentStyle = mainTextArea.getStyle();
             StringBuilder styleBuilder = new StringBuilder(currentStyle);
 
-            // Create style for selected portion
             String fontFamily = fontBox.getValue();
             styleBuilder.append("-fx-font-family: '").append(fontFamily).append("';");
 
             String fontSize = fontSizeBox.getValue().toString();
             styleBuilder.append("-fx-font-size: ").append(fontSize).append("px; ");
 
-            // Handle bold logic
             if (boldButton.isSelected()) {
                 if (!currentStyle.contains("-fx-font-weight: bold;")) {
                     styleBuilder.append("-fx-font-weight: bold;");
                 }
             } else {
-                // Remove bold if it exists in the style
                 int boldIndex = currentStyle.indexOf("-fx-font-weight: bold;");
                 if (boldIndex != -1) {
                     styleBuilder = new StringBuilder(
@@ -279,7 +273,7 @@ public class UIController implements Initializable {
                 }
             }
 
-            Color textColor = textColorPicker.getValue(); // Assume textColorPicker is your ColorPicker for text color
+            Color textColor = textColorPicker.getValue();
             if (textColor != null) {
                 String colorString = String.format("#%02X%02X%02X", (int) (textColor.getRed() * 255), (int) (textColor.getGreen() * 255), (int) (textColor.getBlue() * 255));
                 if (!currentStyle.contains("-fx-text-fill: " + colorString + ";")) {
@@ -306,15 +300,15 @@ public class UIController implements Initializable {
             // Check which button is selected and apply the corresponding alignment
             if (alignLeftButton.isSelected()) {
                 styleBuilder.append("-fx-text-alignment: left;");
-                alignCenterButton.setSelected(false);  // Deselect other buttons
+                alignCenterButton.setSelected(false);
                 alignRightButton.setSelected(false);
             } else if (alignCenterButton.isSelected()) {
                 styleBuilder.append("-fx-text-alignment: center;");
-                alignLeftButton.setSelected(false);  // Deselect other buttons
+                alignLeftButton.setSelected(false);
                 alignRightButton.setSelected(false);
             } else if (alignRightButton.isSelected()) {
                 styleBuilder.append("-fx-text-alignment: right;");
-                alignLeftButton.setSelected(false);  // Deselect other buttons
+                alignLeftButton.setSelected(false);
                 alignCenterButton.setSelected(false);
             }
 
